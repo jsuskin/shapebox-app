@@ -67,6 +67,48 @@ const createSaveBtn = () => {
   return btn;
 }
 
+const displayShape = (type, dims) => new Shape( { name: "", type: type }, dims, currentColor );
+
+const setInputLabels = () => {
+  if (currentShape.type === "Triangle") {
+    return ["x1", "y1", "x2", "y2", "x3", "y3"];
+  }
+  if (currentShape.type === "Quadrilateral") {
+    return ["x1", "y1", "x2", "y2", "x3", "y3", "x4", "y4"];
+  }
+  if (["Ellipse", "Rectangle"].indexOf(currentShape.type) > -1) {
+    return ["posX", "posY", "width", "height"];
+  }
+}
+
+const setInput = (x, idx) => {
+  const input = createInput();
+  input.attribute("placeholder", inputLabels[idx]);
+  input.size(width / inputLabels.length - 35);
+  input.value(x);
+  input.changed(() => {
+    currentShape.dims[idx] = input.value();
+  });
+  return input;
+}
+
+const setInputAndLabels = (x, idx) => {
+  inputLabels = setInputLabels();
+  const input = setInput(x, idx);
+  dimsDiv.child(input);
+  rgbSliders.forEach((s, idx) => {
+    s.value(currentColor[idx]);
+  });
+};
+
+const setCurrentShape = (numDims, defDims, val) => {
+  const currentDims =
+    currentShape && currentShape.dims.length === numDims
+      ? currentShape.dims.slice()
+      : defDims;
+  return displayShape(val, currentDims);
+};
+
 // DEFAULT DIMENSIONS
 
 const defaultDims = (width, height) => [width / 2, height / 2, 50, 50];
