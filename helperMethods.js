@@ -1,48 +1,3 @@
-// FETCHES
-
-// add saved shape names to select
-function fetchShapeNames() {
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      data
-        .sort((a, b) => a.name < b.name ? -1 : b.name < a.name ? 1 : 0)
-        .forEach(shape => {
-          savedShapesSelect.option(shape.name);
-          savedShapes.push([shape.name, shape._id]);
-        });
-    });
-}
-
-function fetchShape(url, id) {
-  fetch(`${url}/${id}`)
-    .then(res => res.json())
-    .then(shape => {
-      currentShape = new Shape(
-        { name: shape.name, type: shape.type },
-        shape.dims,
-        shape.color
-      );
-      setInputs();
-    });
-}
-
-function postShape() {
-  fetch(url, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      name: nameInput.value(),
-      type: currentShape.type,
-      dims: [...currentShape.dims],
-      color: [...currentShape.color]
-    })
-  });
-}
-
 // ELEMENT SETTINGS/ORGANIZATION
 
 const createSavedShapesSelect = () => {
@@ -135,3 +90,48 @@ const quadDefaultDims = (width, height) => [
   width / 2 + 70,
   height / 2 + 40
 ];
+
+// FETCHES
+
+// add saved shape names to select
+function fetchShapeNames() {
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      data
+        .sort((a, b) => a.name < b.name ? -1 : b.name < a.name ? 1 : 0)
+        .forEach(shape => {
+          savedShapesSelect.option(shape.name);
+          savedShapes.push([shape.name, shape._id]);
+        });
+    });
+}
+
+function fetchShape(url, id) {
+  fetch(`${url}/${id}`)
+    .then(res => res.json())
+    .then(shape => {
+      currentShape = new Shape(
+        { name: shape.name, type: shape.type },
+        shape.dims,
+        shape.color
+      );
+      setInputs();
+    });
+}
+
+function postShape() {
+  fetch(url, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: nameInput.value(),
+      type: currentShape.type,
+      dims: [...currentShape.dims],
+      color: [...currentShape.color]
+    })
+  });
+}
