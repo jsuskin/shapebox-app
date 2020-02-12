@@ -21,14 +21,7 @@ const url = 'http://localhost:4000/shapes';
 
 function setup() {
   // saved shapes dropdown
-  savedShapesSelect = createSelect();
-  savedShapesSelect.show();
-  savedShapesSelect.attribute('id', 'saved-shapes');
-  savedShapesSelect.style('width', '100%');
-  savedShapesSelect.style('margin', '7.5px 0');
-  savedShapesSelect.option('Select a Shape');
-  fetchShapeNames();
-  savedShapesSelect.changed(setShape);
+  savedShapesSelect = createSavedShapesSelect();
 
   // canvas
   textAlign(CENTER);
@@ -38,50 +31,23 @@ function setup() {
   currentColor = [random(255), random(255), random(255)];
 
   // red green blue slider controls
-  rgbDiv = createDiv();
-  rgbDiv.style('display', 'flex');
-  rgbDiv.style('justify-content', 'space-around');
+  rgbDiv = createRgbDiv();
+  rgbSliders.forEach(setSliders(rgbDiv, width, setColor));
 
-  rgbSliders.forEach((s, idx, self) => {
-    self[idx] = createSlider(0, 255, 0);
-    // self[idx].value(currentColor[idx]);
-    self[idx].parent(rgbDiv);
-    self[idx].attribute('id', `slider-${idx}`);
-    self[idx].size((width / 3) - 15);
-    self[idx].changed(setColor);
-  });
-
-  // div to hold shape dimension inputs
-  dimsDiv = createDiv();
-  dimsDiv.show();
-  dimsDiv.style('display', 'flex');
-  dimsDiv.style('justify-content', 'space-around');
-  dimsDiv.style('padding', '7.5px 0');
+  // div to hold (4-8) shape dimension inputs
+  dimsDiv = createDimsDiv();
 
   // div holds typeSelect, nameInput, saveBtn
-  miscDiv = createDiv();
-  miscDiv.show();
-  miscDiv.style('text-align', 'center');
+  miscDiv = createMiscDiv();
 
   // select a type for basic shape
-  typeSelect = createSelect();
-  typeSelect.style('margin', '0 7.5px');
-  typeSelect.attribute('id', 'type-select');
-  typeSelect.option('Ellipse');
-  typeSelect.option('Rectangle');
-  typeSelect.option('Triangle');
-  typeSelect.option('Quadrilateral');
-  typeSelect.changed(setShape);
+  typeSelect = setTypeSelect();
   
   // name shape to save
-  nameInput = createInput();
-  nameInput.style('margin', '0 7.5px');
-  nameInput.attribute('placeholder', 'Name');
+  nameInput = createNameInput();
   
   // save current shape
-  saveBtn = createButton('Save Shape');
-  saveBtn.style('margin', '0 7.5px');
-  saveBtn.mousePressed(saveShape);
+  saveBtn = createSaveBtn();
 
   miscDiv.child(typeSelect);
   miscDiv.child(nameInput);
@@ -109,30 +75,13 @@ function mouseWheel(evt) {
   return false;
 }
 
-// add saved shape names to select
-function fetchShapeNames() {
-  fetch(url).then(res => res.json()).then(data => {
-    data.forEach(shape => {
-      savedShapesSelect.option(shape.name);
-      savedShapes.push([shape.name, shape._id]);
-    });
-  });
-}
-
 function setShape() {
   // currentColor = /*currentShape ? currentShape.color.slice() :*/ [ random(255), random(255), random(255) ];
 
   // if selecting a shape already in db
   if(this.id() === 'saved-shapes') {
     const id = savedShapes.find(shape => shape[0] === this.value())[1];
-
-    fetch(`${url}/${id}`)
-      .then(res => res.json())
-      .then(shape => {
-        currentShape = new Shape({ name: shape.name, type: shape.type }, shape.dims, shape.color);
-        setInputs();
-      });
-      
+    fetchShape(url, id);
   } else if( ['Ellipse', 'Rectangle'].indexOf(this.value()) > -1 ) {
     const currentDims =
       currentShape && currentShape.dims.length === 4
@@ -184,27 +133,13 @@ function setInputs() {
 
 function setColor(evt) {
   const rgbIndex = +evt.target.id.slice(-1);
-  // const [ r, g, b ] = currentColor;
-
   currentColor[rgbIndex] = rgbSliders[rgbIndex].value();
   currentShape.color = [ ...currentColor ];
 }
 
 function saveShape() {
   if(nameInput.value()) {
-    fetch(url, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name: nameInput.value(),
-        type: currentShape.type,
-        dims: [ ...currentShape.dims ],
-        color: [ ...currentShape.color ]
-      })
-    });
+    postShape();
   } else {
     console.log('Enter Name');
   }
