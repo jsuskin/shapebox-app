@@ -94,7 +94,7 @@ const setInput = (x, idx) => {
   input.size(width / inputLabels.length - 35);
   input.value(x);
   input.changed(() => {
-    currentShape.dims[idx] = input.value();
+    currentShape.dims[idx] = +input.value();
   });
   return input;
 }
@@ -156,6 +156,7 @@ function fetchShapeNames() {
     });
 }
 
+// fetch shape to display
 function fetchShape(url, id) {
   fetch(`${url}/${id}`)
     .then(res => res.json())
@@ -169,6 +170,7 @@ function fetchShape(url, id) {
     });
 }
 
+// save shape
 function postShape() {
   fetch(url, {
     method: "POST",
@@ -185,6 +187,7 @@ function postShape() {
   });
 }
 
+// update shape
 function putShape() {
   fetch(`${url}/${currentShape.id}`, {
     method: "PUT",
