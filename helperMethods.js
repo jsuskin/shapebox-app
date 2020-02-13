@@ -67,6 +67,13 @@ const createSaveBtn = () => {
   return btn;
 }
 
+const createUpdateBtn = () => {
+  const btn = createButton("Update Shape");
+  btn.style("margin", "0 7.5px");
+  btn.mousePressed(updateShape);
+  return btn;
+}
+
 const displayShape = (type, dims) => new Shape( { name: "", type: type }, dims, currentColor );
 
 const setInputLabels = () => {
@@ -154,7 +161,7 @@ function fetchShape(url, id) {
     .then(res => res.json())
     .then(shape => {
       currentShape = new Shape(
-        { name: shape.name, type: shape.type },
+        { name: shape.name, type: shape.type, id: shape._id },
         shape.dims,
         shape.color
       );
@@ -171,6 +178,22 @@ function postShape() {
     },
     body: JSON.stringify({
       name: nameInput.value(),
+      type: currentShape.type,
+      dims: [...currentShape.dims],
+      color: [...currentShape.color]
+    })
+  });
+}
+
+function putShape() {
+  fetch(`${url}/${currentShape.id}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: currentShape.name,
       type: currentShape.type,
       dims: [...currentShape.dims],
       color: [...currentShape.color]

@@ -9,6 +9,7 @@ let canvas,
     nameInput, 
     savedShapesSelect, 
     saveBtn,
+    updateBtn,
     // set initial height and width of window
     ww = window.innerWidth, wh = window.innerHeight;
 // redSlider, greenSlider, blueSlider
@@ -38,10 +39,12 @@ function setup() {
   nameInput = createNameInput();
   // save current shape
   saveBtn = createSaveBtn();
+  updateBtn = createUpdateBtn();
 
   miscDiv.child(typeSelect);
   miscDiv.child(nameInput);
   miscDiv.child(saveBtn);
+  miscDiv.child(updateBtn);
 }
 
 function draw() {
@@ -98,6 +101,14 @@ function saveShape() {
   if(nameInput.value()) {
     postShape();
   } else {
-    console.log('Enter Name');
+    console.log("Enter Name");
+  }
+}
+
+function updateShape() {
+  if(currentShape.id) {
+    putShape();
+  } else {
+    console.log("Shape not in database. Give this shape a name and save it if you want to keep it.")
   }
 }

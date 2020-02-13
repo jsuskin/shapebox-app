@@ -1,5 +1,6 @@
 class Shape {
   constructor(shapeObj, dimsObj, colsObj) {
+    this.id = shapeObj.id
     this.name = shapeObj.name;
     this.type = shapeObj.type;
     this.dims = [...dimsObj];
