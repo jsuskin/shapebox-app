@@ -73,22 +73,15 @@ function setShape() {
     fetchShape(url, id);
   // select default ellipse/rectangle
   } else if( ['Ellipse', 'Rectangle'].indexOf(this.value()) > -1 ) {
-    currentShape = setCurrentShape(4, defaultDims(width, height), this.value());
+    currentShape = setCurrentShape(4, Shape.defaultDims(width, height), this.value());
   // select default triangle
   } else if(this.value() === 'Triangle') {
-    currentShape = setCurrentShape(6, triDefaultDims(width, height), this.value());
+    currentShape = setCurrentShape(6, Shape.triDefaultDims(width, height), this.value());
   // select default quad
   } else if(this.value() === 'Quadrilateral') {
-    currentShape = setCurrentShape(8, quadDefaultDims(width, height), this.value());
+    currentShape = setCurrentShape(8, Shape.quadDefaultDims(width, height), this.value());
   }
   setInputs();
-}
-
-function setInputs() {
-  dimsDiv.html("");
-  if(currentShape) {
-    currentShape.dims.forEach(setInputAndLabels);
-  }
 }
 
 function setColor(evt) {
@@ -99,7 +92,7 @@ function setColor(evt) {
 
 function saveShape() {
   if(nameInput.value()) {
-    postShape();
+    postShape(url, "POST", nameInput.value());
   } else {
     console.log("Enter Name");
   }
@@ -107,7 +100,7 @@ function saveShape() {
 
 function updateShape() {
   if(currentShape.id) {
-    putShape();
+    postShape(`${url}/${currentShape.id}`, "PUT", currentShape.name);
   } else {
     console.log("Shape not in database. Give this shape a name and save it if you want to keep it.")
   }

@@ -37,8 +37,6 @@ class Shape {
 
     noStroke();
     fill(col);
-
-    // setInputs();
   }
 
   setPos() {
@@ -62,15 +60,46 @@ class Shape {
 
   // shrink/grow ellipse/rectangle
   changeSize(evt) {
-    if (this.dims.length === 4)
+    if(this.dims.length === 4)
       [2, 3].forEach(idx => {
         this.dims[idx] += evt.deltaY / 10;
       });
+    if(this.dims.length === 6) {
+      [0, 1, 2, 3, 4, 5].forEach(idx => {
+        // change triangle size
+      })
+    }
 
     setInputs();
   }
 
-  // setColor(evt) {
-  //   console.log(evt.target)
-  // }
+  // DEFAULT DIMENSIONS
+
+  static defaultDims(width, height) {
+    return [width / 2, height / 2, 50, 50];
+  }
+
+  static triDefaultDims(width, height) {
+    return [
+      width / 2 - 40,
+      height / 2 + 40,
+      width / 2 - 40,
+      height / 2 - 40,
+      width / 2 + 40,
+      height / 2 + 40
+    ];
+  }
+
+  static quadDefaultDims(width, height) {
+    return [
+      width / 2 - 50,
+      height / 2 + 50,
+      width / 2 - 30,
+      height / 2 - 40,
+      width / 2 + 20,
+      height / 2 - 60,
+      width / 2 + 70,
+      height / 2 + 40
+    ];
+  }
 }

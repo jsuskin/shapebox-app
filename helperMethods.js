@@ -108,6 +108,13 @@ const setInputAndLabels = (x, idx) => {
   });
 };
 
+const setInputs = () => {
+  dimsDiv.html("");
+  if (currentShape) {
+    currentShape.dims.forEach(setInputAndLabels);
+  }
+}
+
 const setCurrentShape = (numDims, defDims, val) => {
   const currentDims =
     currentShape && currentShape.dims.length === numDims
@@ -115,30 +122,6 @@ const setCurrentShape = (numDims, defDims, val) => {
       : defDims;
   return displayShape(val, currentDims);
 };
-
-// DEFAULT DIMENSIONS
-
-const defaultDims = (width, height) => [width / 2, height / 2, 50, 50];
-
-const triDefaultDims = (width, height) => [
-  width / 2 - 40,
-  height / 2 + 40,
-  width / 2 - 40,
-  height / 2 - 40,
-  width / 2 + 40,
-  height / 2 + 40
-];
-
-const quadDefaultDims = (width, height) => [
-  width / 2 - 50,
-  height / 2 + 50,
-  width / 2 - 30,
-  height / 2 - 40,
-  width / 2 + 20,
-  height / 2 - 60,
-  width / 2 + 70,
-  height / 2 + 40
-];
 
 // FETCHES
 
@@ -156,7 +139,7 @@ function fetchShapeNames() {
     });
 }
 
-// fetch shape to display
+// GET shape to display
 function fetchShape(url, id) {
   fetch(`${url}/${id}`)
     .then(res => res.json())
@@ -170,33 +153,16 @@ function fetchShape(url, id) {
     });
 }
 
-// save shape
-function postShape() {
-  fetch(url, {
-    method: "POST",
+// POST/PUT reqs
+function postShape(path, method, name) {
+  fetch(path, {
+    method: method,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      name: nameInput.value(),
-      type: currentShape.type,
-      dims: [...currentShape.dims],
-      color: [...currentShape.color]
-    })
-  });
-}
-
-// update shape
-function putShape() {
-  fetch(`${url}/${currentShape.id}`, {
-    method: "PUT",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      name: currentShape.name,
+      name: name,
       type: currentShape.type,
       dims: [...currentShape.dims],
       color: [...currentShape.color]
