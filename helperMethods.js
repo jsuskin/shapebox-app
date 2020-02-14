@@ -3,9 +3,7 @@
 const createSavedShapesSelect = () => {
   const sel = createSelect();
   sel.show();
-  sel.attribute("id", "saved-shapes");
-  sel.style("width", "100%");
-  sel.style("margin", "7.5px 0");
+  sel.attribute("class", "full-width with-pad");
   sel.option("Select a Shape");
   fetchShapeNames();
   sel.changed(setShape);
@@ -15,23 +13,20 @@ const createSavedShapesSelect = () => {
 const createDimsDiv = () => {
   const div = createDiv();
   div.show();
-  div.style("display", "flex");
-  div.style("justify-content", "space-around");
-  div.style("padding", "7.5px 0");
+  div.attribute("class", "flex-space-around with-pad");
   return div;
 }
 
 const createMiscDiv = () => {
   const div = createDiv();
   div.show();
-  div.style("text-align", "center");
+  div.attribute("class", "textalign-center")
   return div;
 }
 
 const createRgbDiv = () => {
   const div = createDiv();
-  div.style("display", "flex");
-  div.style("justify-content", "space-around");
+  div.attribute("class", "flex-space-around");
   return div;
 }
 
@@ -46,8 +41,7 @@ const setSliders = (rgbDiv, width, setColor) => (s, idx, self) => {
 
 const setTypeSelect = () => {
   const sel = createSelect();
-  sel.style("margin", "0 7.5px");
-  sel.attribute("id", "type-select");
+  sel.attribute("class", "with-margin");
   ["Ellipse", "Rectangle", "Triangle", "Quadrilateral"].forEach(shape => sel.option(shape));
   sel.changed(setShape);
   return sel;
@@ -55,21 +49,21 @@ const setTypeSelect = () => {
 
 const createNameInput = () => {
   const input = createInput();
-  input.style("margin", "0 7.5px");
+  input.attribute("class", "with-margin");
   input.attribute("placeholder", "Name");
   return input;
 }
 
 const createSaveBtn = () => {
   const btn = createButton("Save Shape");
-  btn.style("margin", "0 7.5px");
+  btn.attribute("class", "with-margin");
   btn.mousePressed(saveShape);
   return btn;
 }
 
 const createUpdateBtn = () => {
   const btn = createButton("Update Shape");
-  btn.style("margin", "0 7.5px");
+  btn.attribute("class", "with-margin");
   btn.mousePressed(updateShape);
   return btn;
 }
