@@ -3,30 +3,24 @@
 const createSavedShapesSelect = () => {
   const sel = createSelect();
   sel.show();
-  sel.attribute("class", "full-width with-pad");
+  sel.attribute("id", "saved-shapes");
+  sel.class("full-width with-pad");
   sel.option("Select a Shape");
   fetchShapeNames();
   sel.changed(setShape);
   return sel;
 }
 
-const createDimsDiv = () => {
+const createDivWithClassName = className => {
   const div = createDiv();
   div.show();
-  div.attribute("class", "flex-space-around with-pad");
-  return div;
-}
-
-const createMiscDiv = () => {
-  const div = createDiv();
-  div.show();
-  div.attribute("class", "textalign-center")
+  div.class(className);
   return div;
 }
 
 const createRgbDiv = () => {
   const div = createDiv();
-  div.attribute("class", "flex-space-around");
+  div.class("flex-space-around");
   return div;
 }
 
@@ -41,7 +35,8 @@ const setSliders = (rgbDiv, width, setColor) => (s, idx, self) => {
 
 const setTypeSelect = () => {
   const sel = createSelect();
-  sel.attribute("class", "with-margin");
+  sel.attribute("id", "type-select");
+  sel.class("with-margin");
   ["Ellipse", "Rectangle", "Triangle", "Quadrilateral"].forEach(shape => sel.option(shape));
   sel.changed(setShape);
   return sel;
@@ -49,21 +44,21 @@ const setTypeSelect = () => {
 
 const createNameInput = () => {
   const input = createInput();
-  input.attribute("class", "with-margin");
+  input.class("with-margin");
   input.attribute("placeholder", "Name");
   return input;
 }
 
 const createSaveBtn = () => {
   const btn = createButton("Save Shape");
-  btn.attribute("class", "with-margin");
+  btn.class("with-margin");
   btn.mousePressed(saveShape);
   return btn;
 }
 
 const createUpdateBtn = () => {
   const btn = createButton("Update Shape");
-  btn.attribute("class", "with-margin");
+  btn.class("with-margin");
   btn.mousePressed(updateShape);
   return btn;
 }

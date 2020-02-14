@@ -30,9 +30,9 @@ function setup() {
   rgbDiv = createRgbDiv();
   rgbSliders.forEach(setSliders(rgbDiv, width, setColor));
   // div to hold (4-8) shape dimension inputs
-  dimsDiv = createDimsDiv();
+  dimsDiv = createDivWithClassName("flex-space-around with-pad");
   // div holds typeSelect, nameInput, saveBtn
-  miscDiv = createMiscDiv();
+  miscDiv = createDivWithClassName("textalign-center");
   // select a type for basic shape
   typeSelect = setTypeSelect();
   // name shape to save

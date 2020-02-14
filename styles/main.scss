@@ -7,7 +7,7 @@
 }
 
 .flex-space-around {
-  display: flex;
+  display: flex !important;
   justify-content: space-around;
 }
 
