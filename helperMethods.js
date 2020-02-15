@@ -3,11 +3,17 @@
 const createSavedShapesSelect = () => {
   const sel = createSelect();
   sel.show();
+  sel.changed(setShape);
   sel.attribute("id", "saved-shapes");
   sel.class("full-width with-pad");
-  sel.option("Select a Shape");
+
+  sel.option("Saved Shapes");
+  sel.selected("Saved Shapes");
+  const options = selectAll('option', '#saved-shapes');
+  options[0].elt.disabled = true;
+
   fetchShapeNames();
-  sel.changed(setShape);
+  
   return sel;
 }
 
@@ -37,6 +43,10 @@ const setTypeSelect = () => {
   const sel = createSelect();
   sel.attribute("id", "type-select");
   sel.class("with-margin");
+  sel.option("Select Shape");
+  sel.selected("Select Shape");
+  const options = selectAll("option", "#type-select");
+  options[0].elt.disabled = true;
   ["Ellipse", "Rectangle", "Triangle", "Quadrilateral"].forEach(shape => sel.option(shape));
   sel.changed(setShape);
   return sel;
