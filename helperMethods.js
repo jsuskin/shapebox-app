@@ -122,6 +122,22 @@ const setCurrentShape = (numDims, defDims, val) => {
   return displayShape(val, currentDims);
 };
 
+const findClosestAlongAxis = (arr, axis) => {
+  const counts =
+    axis === "x"
+      ? arr.filter((x, idx) => idx % 2 === 0)
+      : arr.filter((x, idx) => idx % 2 !== 0);
+  const goal = axis === "x" ? mouseX : mouseY;
+
+  const closest = counts.reduce(function(prev, curr) {
+    return Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev;
+  });
+
+  return closest;
+};
+
+const closest = arr => ["x", "y"].map(axis => findClosestAlongAxis(arr, axis));
+
 // FETCHES
 
 // add saved shape names to select

@@ -5,6 +5,8 @@ class Shape {
     this.type = shapeObj.type;
     this.dims = [...dimsObj];
     this.color = [...colsObj];
+    this.isBeingDragged = false;
+    this.pointsBeingDragged = [];
   }
 
   show() {
@@ -43,47 +45,41 @@ class Shape {
     const findCenter = stmt =>
       this.dims.filter((x, idx) => stmt(idx)).reduce((a, b) => a + b) / 3;
 
-    // Ellipse, Rectangle
+    // Move Ellipse, Rectangle
     if (this.dims.length === 4) {
       this.dims[0] = mouseX;
       this.dims[1] = mouseY;
-    // Triangle
-    } else if(this.dims.length === 6) {
+    // Move triangle when ctrl is pressed
+    } else if(this.dims.length === 6 && keyIsDown(CONTROL)) {
       const ctrX = findCenter(idx => idx % 2 === 0),
         ctrY = findCenter(idx => idx % 2 !== 0);
 
       this.dims.forEach((d, idx, self) => {
         self[idx] = d - (idx % 2 === 0 ? ctrX - mouseX : ctrY - mouseY);
       });
-    // Quadrilateral
+    // Redfine dimensions of triangle/quadrilateral with canvas click
     } else {
-      const findClosestAlongAxis = axis => {
-        const counts =
-          axis === "x"
-            ? this.dims.filter((x, idx) => idx % 2 === 0)
-            : this.dims.filter((x, idx) => idx % 2 !== 0);
-        const goal = axis === "x" ? mouseX : mouseY;
-
-        const closest = counts.reduce(function(prev, curr) {
-          return Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev;
-        });
-        
-        return closest;
-      }
-
-      const closest = ['x', 'y'].map(axis => findClosestAlongAxis(axis));
-      const [ xTarget, yTarget ] = [0, 1].map(num => this.dims.indexOf(closest[num]));
+      const [ xTarget, yTarget ] = [0, 1].map(num => this.dims.indexOf(closest(this.dims)[num]));
       const [ correspondingXValue, correspondingYValue ] = [xTarget + 1, yTarget - 1].map(idx => this.dims[idx]);
-      const useXVal =
-        this.dims[xTarget] - correspondingXValue <
-        this.dims[yTarget] - correspondingYValue;
 
-      if(useXVal) {
-        this.dims[xTarget] = mouseX;
-        this.dims[xTarget + 1] = mouseY;
+      const useXVal =
+        Math.abs(this.dims[xTarget] - correspondingXValue) <
+        Math.abs(this.dims[yTarget] - correspondingYValue);
+
+      if(!this.isBeingDragged) {
+        this.pointsBeingDragged = [xTarget, xTarget + 1];
+
+        if(useXVal) {
+          this.dims[xTarget] = mouseX;
+          this.dims[xTarget + 1] = mouseY;
+        } else {
+          this.dims[yTarget] = mouseY;
+          this.dims[yTarget - 1] = mouseX;
+        }
+        
       } else {
-        this.dims[yTarget] = mouseY;
-        this.dims[yTarget - 1] = mouseX;
+        this.dims[this.pointsBeingDragged[0]] = mouseX;
+        this.dims[this.pointsBeingDragged[1]] = mouseY;
       }
     }
 

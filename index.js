@@ -52,12 +52,18 @@ function draw() {
   background(222);
   rectMode(CENTER);
 
-  if(currentShape) currentShape.show();
+  if(currentShape) {
+    currentShape.isBeingDragged = false;
+    currentShape.show();
+  }
 }
 
 // move shape
 function mouseDragged() {
-  if (currentShape && mouseY < height && mouseY > 0) currentShape.setPos();
+  if (currentShape && mouseY < height && mouseY > 0) {
+    currentShape.isBeingDragged = true;
+    currentShape.setPos();
+  }
 }
 
 // shrink/grow shape
