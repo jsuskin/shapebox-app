@@ -1,10 +1,20 @@
 // ELEMENT SETTINGS/ORGANIZATION
 
+const createInfoDiv = () => {
+  div = createDiv();
+  div.id("info-div");
+  div.position(50, 50);
+  appTitle = createElement("h1", "Shapebox");
+  appTitle.class("app-title")
+  div.child(appTitle);
+  return div;
+}
+
 const createSavedShapesSelect = () => {
   const sel = createSelect();
   sel.show();
   sel.changed(setShape);
-  sel.attribute("id", "saved-shapes");
+  sel.id("saved-shapes");
   sel.class("full-width with-pad");
 
   sel.option("Saved Shapes");
@@ -32,16 +42,15 @@ const createRgbDiv = () => {
 
 const setSliders = (rgbDiv, width, setColor) => (s, idx, self) => {
   self[idx] = createSlider(0, 255, 0);
-  // self[idx].value(currentColor[idx]);
   self[idx].parent(rgbDiv);
-  self[idx].attribute("id", `slider-${idx}`);
+  self[idx].id(`slider-${idx}`);
   self[idx].size(width / 3 - 15);
   self[idx].changed(setColor);
 };
 
 const setTypeSelect = () => {
   const sel = createSelect();
-  sel.attribute("id", "type-select");
+  sel.id("type-select");
   sel.class("with-margin");
   sel.option("Select Shape");
   sel.selected("Select Shape");

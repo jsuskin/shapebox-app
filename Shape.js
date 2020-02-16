@@ -60,23 +60,21 @@ class Shape {
     // Redfine dimensions of triangle/quadrilateral with canvas click
     } else {
       const [ xTarget, yTarget ] = [0, 1].map(num => this.dims.indexOf(closest(this.dims)[num]));
-      const [ correspondingXValue, correspondingYValue ] = [xTarget + 1, yTarget - 1].map(idx => this.dims[idx]);
+      const [ correspondingXValue, correspondingYValue ] = [yTarget - 1, xTarget + 1].map(idx => this.dims[idx]);
 
       const useXVal =
         Math.abs(this.dims[xTarget] - correspondingXValue) <
         Math.abs(this.dims[yTarget] - correspondingYValue);
 
-      if(!this.isBeingDragged) {
-        this.pointsBeingDragged = [xTarget, xTarget + 1];
-
-        if(useXVal) {
-          this.dims[xTarget] = mouseX;
-          this.dims[xTarget + 1] = mouseY;
-        } else {
-          this.dims[yTarget] = mouseY;
-          this.dims[yTarget - 1] = mouseX;
+        const setCoords = target => {
+          const isX = target === "x";
+          this.pointsBeingDragged = isX ? [xTarget, xTarget + 1] : [yTarget - 1, yTarget];
+          this.dims[isX ? xTarget : yTarget - 1] = mouseX;
+          this.dims[isX ? xTarget + 1 : yTarget] = mouseY;
         }
-        
+
+      if(!this.isBeingDragged) {
+        useXVal ? setCoords('x') : setCoords('y');
       } else {
         this.dims[this.pointsBeingDragged[0]] = mouseX;
         this.dims[this.pointsBeingDragged[1]] = mouseY;

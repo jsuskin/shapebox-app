@@ -1,3 +1,26 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:400,600&display=swap');
+
+* {
+  font-family: 'Source Code Pro', monospace;
+}
+
+#info-div {
+  color: rgba(black, .6);
+  user-select: none;
+  pointer-events: none;
+  cursor: default;
+}
+
+.info-display {
+  font-size: .9em;
+}
+
+.instruction {
+  position: absolute;
+  font-size: .75em;
+  font-weight: 600;
+}
+
 .full-width {
   width: 100%;
 }

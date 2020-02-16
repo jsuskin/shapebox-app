@@ -1,4 +1,7 @@
-let canvas, 
+let canvas,
+    infoDiv,
+    appTitle,
+    colorDisplay,
     currentShape, 
     dimsDiv,
     inputLabels,
@@ -20,6 +23,8 @@ const url = 'http://localhost:4000/shapes';
 function setup() {
   // saved shapes dropdown
   savedShapesSelect = createSavedShapesSelect();
+
+  infoDiv = createInfoDiv();
   // canvas
   textAlign(CENTER);
   canvas = createCanvas(ww - 15, wh * 4 / 5);
@@ -54,7 +59,23 @@ function draw() {
 
   if(currentShape) {
     currentShape.isBeingDragged = false;
+    currentShape.color = [
+      rgbSliders[0].value(),
+      rgbSliders[1].value(),
+      rgbSliders[2].value()
+    ];
     currentShape.show();
+
+    coordinateDisplay = inputLabels.map((label, idx) => `<p class="info-display">${label}: ${Math.round(currentShape.dims[idx])}</p>`).join('\n');
+    colorDisplay = ['RED', 'GREEN', 'BLUE'].map((col, idx) => `<p class="info-display">${col}: ${Math.round(currentShape.color[idx])}</p>`).join('\n');
+    const instruction =
+      currentShape.type === "Triangle"
+        ? `<p class="instruction">Hold ctrl to move ${currentShape.type}</p>`
+        : currentShape.type === "Ellipse" || currentShape.type === "Rectangle"
+          ? `<p class="instruction">Scroll to resize ${currentShape.type}</p>`
+          : '';
+
+    infoDiv.html([coordinateDisplay, colorDisplay, instruction].join('\n'));
   }
 }
 
@@ -93,7 +114,6 @@ function setShape() {
 function setColor(evt) {
   const rgbIndex = +evt.target.id.slice(-1);
   currentColor[rgbIndex] = rgbSliders[rgbIndex].value();
-  currentShape.color = [ ...currentColor ];
 }
 
 function saveShape() {
