@@ -54,7 +54,7 @@ function setup() {
 
 function draw() {
   canvas.clear();
-  background(222);
+  background('#f2f9f2');
   rectMode(CENTER);
 
   if(currentShape) {
@@ -66,16 +66,7 @@ function draw() {
     ];
     currentShape.show();
 
-    coordinateDisplay = inputLabels.map((label, idx) => `<p class="info-display">${label}: ${Math.round(currentShape.dims[idx])}</p>`).join('\n');
-    colorDisplay = ['RED', 'GREEN', 'BLUE'].map((col, idx) => `<p class="info-display">${col}: ${Math.round(currentShape.color[idx])}</p>`).join('\n');
-    const instruction =
-      currentShape.type === "Triangle"
-        ? `<p class="instruction">Hold ctrl to move ${currentShape.type}</p>`
-        : currentShape.type === "Ellipse" || currentShape.type === "Rectangle"
-          ? `<p class="instruction">Scroll to resize ${currentShape.type}</p>`
-          : '';
-
-    infoDiv.html([coordinateDisplay, colorDisplay, instruction].join('\n'));
+    setInfoDisplay();
   }
 }
 
@@ -118,7 +109,10 @@ function setColor(evt) {
 
 function saveShape() {
   if(nameInput.value()) {
-    postShape(url, "POST", nameInput.value());
+    postShape(url, "POST", nameInput.value()).then(res => res.json()).then(data => {
+      savedShapesSelect.option(data.name);
+      savedShapes.push([data.name, data.id]);
+    });
   } else {
     console.log("Enter Name");
   }

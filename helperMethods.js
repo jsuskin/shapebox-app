@@ -1,5 +1,32 @@
 // ELEMENT SETTINGS/ORGANIZATION
 
+const setInfoDisplay = () => {
+  coordinateDisplay = inputLabels
+    .map(
+      (label, idx) =>
+        `<p class="info-display">${label}: ${Math.round(
+          currentShape.dims[idx]
+        )}</p>`
+    )
+    .join("\n");
+  colorDisplay = ["RED", "GREEN", "BLUE"]
+    .map(
+      (col, idx) =>
+        `<p class="info-display">${col}: ${Math.round(
+          currentShape.color[idx]
+        )}</p>`
+    )
+    .join("\n");
+  const instruction =
+    currentShape.type === "Triangle"
+      ? `<p class="instruction">Hold ctrl to move ${currentShape.type}</p>`
+      : currentShape.type === "Ellipse" || currentShape.type === "Rectangle"
+      ? `<p class="instruction">Scroll to resize ${currentShape.type}</p>`
+      : "";
+
+  infoDiv.html([coordinateDisplay, colorDisplay, instruction].join("\n"));
+}
+
 const createInfoDiv = () => {
   div = createDiv();
   div.id("info-div");
@@ -52,8 +79,8 @@ const setTypeSelect = () => {
   const sel = createSelect();
   sel.id("type-select");
   sel.class("with-margin");
-  sel.option("Select Shape");
-  sel.selected("Select Shape");
+  sel.option("Default Shapes");
+  sel.selected("Default Shapes");
   const options = selectAll("option", "#type-select");
   options[0].elt.disabled = true;
   ["Ellipse", "Rectangle", "Triangle", "Quadrilateral"].forEach(shape => sel.option(shape));
@@ -112,7 +139,7 @@ const setInputAndLabels = (x, idx) => {
   const input = setInput(x, idx);
   dimsDiv.child(input);
   rgbSliders.forEach((s, idx) => {
-    s.value(currentColor[idx]);
+    s.value(currentShape.color[idx]);
   });
 };
 
@@ -147,20 +174,23 @@ const findClosestAlongAxis = (arr, axis) => {
 
 const closest = arr => ["x", "y"].map(axis => findClosestAlongAxis(arr, axis));
 
+const setOptions = shapes => {
+  return shapes
+    .sort((a, b) => (a.name < b.name ? -1 : b.name < a.name ? 1 : 0))
+    .forEach(shape => {
+      savedShapesSelect.option(shape.name);
+      savedShapes.push([shape.name, shape._id]);
+    });
+}
+
+
 // FETCHES
 
 // add saved shape names to select
 function fetchShapeNames() {
   fetch(url)
     .then(res => res.json())
-    .then(data => {
-      data
-        .sort((a, b) => a.name < b.name ? -1 : b.name < a.name ? 1 : 0)
-        .forEach(shape => {
-          savedShapesSelect.option(shape.name);
-          savedShapes.push([shape.name, shape._id]);
-        });
-    });
+    .then(data => setOptions(data));
 }
 
 // GET shape to display
@@ -179,7 +209,7 @@ function fetchShape(url, id) {
 
 // POST/PUT reqs
 function postShape(path, method, name) {
-  fetch(path, {
+  return fetch(path, {
     method: method,
     headers: {
       Accept: "application/json",
@@ -191,5 +221,5 @@ function postShape(path, method, name) {
       dims: [...currentShape.dims],
       color: [...currentShape.color]
     })
-  });
+  })
 }
