@@ -109,10 +109,12 @@ function setColor(evt) {
 
 function saveShape() {
   if(nameInput.value()) {
-    postShape(url, "POST", nameInput.value()).then(res => res.json()).then(data => {
-      savedShapesSelect.option(data.name);
-      savedShapes.push([data.name, data.id]);
-    });
+    postShape(url, "POST", nameInput.value())
+      .then(res => res.json())
+      .then(data => {
+        savedShapesSelect.option(data.name);
+        savedShapes.push([data.name, data.id]);
+      });
   } else {
     console.log("Enter Name");
   }
@@ -121,6 +123,13 @@ function saveShape() {
 function updateShape() {
   if(currentShape.id) {
     postShape(`${url}/${currentShape.id}`, "PUT", currentShape.name);
+    const updateAlert = createP(`${currentShape.name} has been updated.`);
+    updateAlert.class('alert')
+    // infoDiv.html(updateAlert, true);
+    infoDiv.child(updateAlert);
+    setTimeout(() => {
+      updateAlert.class('hidden');
+    }, 4000);
   } else {
     console.log("Shape not in database. Give this shape a name and save it if you want to keep it.")
   }

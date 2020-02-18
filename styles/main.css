@@ -14,7 +14,7 @@
   font-size: 0.9em;
 }
 
-.instruction {
+.instruction, .alert {
   position: absolute;
   font-size: 0.75em;
   font-weight: 600;
