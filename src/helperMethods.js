@@ -68,7 +68,21 @@ const createRgbDiv = () => {
 }
 
 const setSliders = (rgbDiv, width, setColor) => (s, idx, self) => {
+  const container = createDiv();
+  const rgbVal = createDiv(`${idx === 0 ? 'R' : idx === 1 ? 'G' : 'B'}`);
+  
+  rgbVal.position((width / 3) * idx + 50, "absolute");
+  rgbVal.elt.style.zIndex = -1;
+  rgbVal.elt.style.fontSize = '2em';
+  rgbVal.elt.style.marginTop = '-8.9px';
+  rgbVal.elt.style.fontWeight = 700;
+  rgbVal.elt.style.color = '#333';
+  rgbVal.elt.style.opacity = .6;
+  rgbVal.parent(container);
+  container.parent(rgbDiv);
+  
   self[idx] = createSlider(0, 255, 0);
+  self[idx].elt.style.opacity = .5;
   self[idx].parent(rgbDiv);
   self[idx].id(`slider-${idx}`);
   self[idx].size(width / 3 - 15);
